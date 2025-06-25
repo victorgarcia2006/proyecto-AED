@@ -1,5 +1,6 @@
 #include <iostream>
-#include <string>
+#include <string.h>
+#include <fstream>
 
 using namespace std;
 
@@ -11,6 +12,15 @@ struct Persona {
     string telefono;
     Persona *sig;
     Persona *ant;
+};
+
+//citlali 
+struct DatosPersona{
+    char curp[50];
+    char nombre[100];
+    char direccion[100];
+    char correo[100];
+    char telefono[20];
 };
 
 class ListaPersonas {
@@ -133,6 +143,24 @@ public:
         delete temp;
         cout << "Persona eliminada por CURP.\n";
     }
+    void GuardarDatos(const Persona* persona){
+    DatosPersona datos;
+
+    strncpy (datos.curp, persona->curp.c_str(), sizeof(datos.curp));
+    strncpy (datos.nombre, persona->nombre.c_str(), sizeof(datos.nombre));
+    strncpy (datos.direccion, persona->direccion.c_str(), sizeof(datos.direccion));
+    strncpy (datos.correo, persona->correo.c_str(), sizeof(datos.correo));  
+    strncpy (datos.telefono, persona->telefono.c_str(), sizeof(datos.telefono));
+
+    ofstream archivo("personas.dat", ios::binary | ios::app);
+    if (!archivo) {
+        cout << "Error al abrir el archivo para guardar los datos.\n";
+        return;
+    }
+
+    archivo.write(reinterpret_cast<const char*>(&datos), sizeof(DatosPersona));
+    archivo.close();
+}
 
     ~ListaPersonas() {
         Persona *temp = inicio;
