@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <fstream>
 
 using namespace std;
 
@@ -11,6 +12,15 @@ struct Persona {
     string telefono;
     Persona *sig;
     Persona *ant;
+};
+
+
+struct DatosPersona{
+    char curp[50];
+    char nombre[100];
+    char direccion[100];
+    char correo[100];
+    char telefono[20];
 };
 
 class ListaPersonas {
@@ -46,6 +56,9 @@ public:
         inicio = nuevo;
 
         cout << "Persona insertada al inicio.\n";
+
+         GuardarDatos(nuevo);
+        cout << "Datos guardados en el archivo.\n";
     }
 
     void InsertarFinal(string curp, string nombre, string direccion, string correo, string telefono) {
@@ -71,6 +84,7 @@ public:
         fin = nuevo;
 
         cout << "Persona insertada al final.\n";
+        GuardarDatos(nuevo);
     }
 
     void Mostrar() {
@@ -143,6 +157,25 @@ public:
         }
     }
 };
+
+void GuardarDatos(const Persona* persona){
+    DatosPersona datos;
+
+    strncpy (datos.curp, persona->curp.c_str(), sizeof(datos.curp));
+    strncpy (datos.nombre, persona->nombre.c_str(), sizeof(datos.nombre));
+    strncpy (datos.direccion, persona->direccion.c_str(), sizeof(datos.direccion));
+    strncpy (datos.correo, persona->correo.c_str(), sizeof(datos.correo));  
+    strncpy (datos.telefono, persona->telefono.c_str(), sizeof(datos.telefono));
+
+    ofstream archivo("personas.dat", ios::binary | ios::app);
+    if (!archivo) {
+        cout << "Error al abrir el archivo para guardar los datos.\n";
+        return;
+    }
+
+    archivo.write(reinterpret_cast<const char*>(&datos), sizeof(DatosPersona));
+    archivo.close();
+}
 
 void Menu() {
     cout << "\n=========== MENÚ PERSONAS ===========\n";
