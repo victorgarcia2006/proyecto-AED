@@ -335,7 +335,6 @@ int main() {
             break;
         case 3:
             //aqui va el modificar informacion de Ruby
-            
             cout<< "Ingrese la curp que quiere editar:"<<endl;
             getline(cin, curp); //leer una linea de string
             lista.Modificar(curp);
