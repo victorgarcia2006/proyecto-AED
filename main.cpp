@@ -217,6 +217,73 @@ public:
         cout << "Se cargaron " << contador << " registros desde el archivo.\n";
     }
 
+    void Modificar(string curp){
+        fstream archivo("personas.dat", ios::in | ios::out | ios::binary);
+        if(!archivo){
+            cout <<"Error al abrir el archivo para modificar"<<endl;
+            return;
+        }
+        
+        DatosPersona datos;
+        bool encontrado = false;
+
+        while(!archivo.eof()){
+            streampos pos = archivo.tellg(); //guarda la posicion
+            archivo.read(reinterpret_cast<char*>(&datos), sizeof(DatosPersona));
+
+        if (archivo.eof()) break;
+
+        if (string(datos.curp) == curp) {
+            encontrado = true;
+            cout << "\nRegistro encontrado:\n";
+            cout << "Nombre: " << datos.nombre << endl;
+            cout << "Direccion: " << datos.direccion << endl;
+            cout << "Correo: " << datos.correo << endl;
+            cout << "Telefono: " << datos.telefono << endl;
+
+            char opcion;
+
+            cout << "¿Deseas modificar el nombre? (s/n): ";
+            cin >> opcion;
+            cin.ignore();
+            if (opcion == 's') {
+                cout << "Nuevo nombre: ";
+                cin.getline(datos.nombre, sizeof(datos.nombre));
+            }
+
+            cout << "¿Deseas modificar la direccion? (s/n): ";
+            cin >> opcion;
+            cin.ignore();
+            if (opcion == 's') {
+                cout << "Nueva direccion: ";
+                cin.getline(datos.direccion, sizeof(datos.direccion));
+            }
+
+            cout << "¿Deseas modificar el correo? (s/n): ";
+            cin >> opcion;
+            cin.ignore();
+            if (opcion == 's') {
+                cout << "Nuevo correo: ";
+                cin.getline(datos.correo, sizeof(datos.correo));
+            }
+
+            cout << "¿Deseas modificar el telefono? (s/n): ";
+            cin >> opcion;
+            cin.ignore();
+            if (opcion == 's') {
+                cout << "Nuevo telefono: ";
+                cin.getline(datos.telefono, sizeof(datos.telefono));
+            }
+
+            // Volver a la posición para sobrescribir
+            archivo.seekp(pos);
+            archivo.write(reinterpret_cast<const char*>(&datos), sizeof(DatosPersona));
+            cout << "Registro actualizado exitosamente.\n";
+            break;
+        }
+        }
+    }
+
     ~ListaPersonas() {
         Persona *temp = inicio;
         while (temp != NULL) {
