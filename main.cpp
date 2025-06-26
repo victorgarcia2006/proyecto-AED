@@ -23,10 +23,6 @@ struct DatosPersona{
     char correo[100];
     char telefono[20];
 };
-
-// Error si no se declara antes de la clase
-void GuardarDatos(const Persona* persona);
-
 class ListaPersonas {
 private:
     Persona *inicio;
@@ -91,10 +87,6 @@ public:
         GuardarDatos(nuevo);
     }
 
-    void Modificar(){
-
-    };
-
     void Mostrar() {
         Persona *temp = inicio;
         if (inicio == NULL) {
@@ -154,6 +146,26 @@ public:
 
         delete temp;
         cout << "Persona eliminada por CURP.\n";
+    }
+
+    //De aqui inicia el codigo de manejo con archivos
+    void GuardarDatos(const Persona* persona){
+    DatosPersona datos;
+
+    strncpy (datos.curp, persona->curp.c_str(), sizeof(datos.curp));
+    strncpy (datos.nombre, persona->nombre.c_str(), sizeof(datos.nombre));
+    strncpy (datos.direccion, persona->direccion.c_str(), sizeof(datos.direccion));
+    strncpy (datos.correo, persona->correo.c_str(), sizeof(datos.correo));  
+    strncpy (datos.telefono, persona->telefono.c_str(), sizeof(datos.telefono));
+
+    ofstream archivo("personas.dat", ios::binary | ios::app);
+    if (!archivo) {
+        cout << "Error al abrir el archivo para guardar los datos.\n";
+        return;
+    }
+
+    archivo.write(reinterpret_cast<const char*>(&datos), sizeof(DatosPersona));
+    archivo.close();
     }
     void Leer() {
         ifstream archivo("personas.dat", ios::binary);
