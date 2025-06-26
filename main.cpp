@@ -91,6 +91,10 @@ public:
         GuardarDatos(nuevo);
     }
 
+    void Modificar(){
+
+    };
+
     void Mostrar() {
         Persona *temp = inicio;
         if (inicio == NULL) {
@@ -211,34 +215,15 @@ public:
     }
 };
 
-void GuardarDatos(const Persona* persona){
-    DatosPersona datos;
 
-    strncpy (datos.curp, persona->curp.c_str(), sizeof(datos.curp));
-    strncpy (datos.nombre, persona->nombre.c_str(), sizeof(datos.nombre));
-    strncpy (datos.direccion, persona->direccion.c_str(), sizeof(datos.direccion));
-    strncpy (datos.correo, persona->correo.c_str(), sizeof(datos.correo));  
-    strncpy (datos.telefono, persona->telefono.c_str(), sizeof(datos.telefono));
-
-    ofstream archivo("personas.dat", ios::binary | ios::app);
-    if (!archivo) {
-        cout << "Error al abrir el archivo para guardar los datos.\n";
-        return;
-    }
-
-    archivo.write(reinterpret_cast<const char*>(&datos), sizeof(DatosPersona));
-    archivo.close();
-}
 
 void Menu() {
     cout << "\n=========== MENU PERSONAS ===========\n";
-    cout << "1. Insertar persona al inicio\n";
-    cout << "2. Insertar persona al final\n";
-    cout << "3. Mostrar todas las personas\n";
-    cout << "4. Buscar persona por CURP\n";
-    cout << "5. Eliminar persona por CURP\n";
-    cout << "6. Cargar datos desde archivo\n";
-    cout << "7. Salir\n";
+    cout << "1. Insertar informacion de persona (Crear)\n";
+    cout << "2. Mostrar datos en archivo (Leer)\n";
+    cout << "3. Modificar datos de persona por CURP (Editar)\n";
+    cout << "4. Eliminar persona por CURP (Eliminar)\n";
+    cout << "5. Salir\n";
     cout << "=====================================\n";
     cout << "Seleccione una opcion: ";
 }
@@ -255,42 +240,29 @@ int main() {
 
         switch (opcion) {
         case 1:
-            cout << "CURP: "; getline(cin, curp);
-            cout << "Nombre: "; getline(cin, nombre);
-            cout << "Direccion: "; getline(cin, direccion);
-            cout << "Correo: "; getline(cin, correo);
-            cout << "Telefono: "; getline(cin, telefono);
-            lista.InsertarInicio(curp, nombre, direccion, correo, telefono);
+            //aqui va el codigo de citlali para crear una persona en el documento
+
             break;
         case 2:
-            cout << "CURP: "; getline(cin, curp);
-            cout << "Nombre: "; getline(cin, nombre);
-            cout << "Direccion: "; getline(cin, direccion);
-            cout << "Correo: "; getline(cin, correo);
-            cout << "Telefono: "; getline(cin, telefono);
-            lista.InsertarFinal(curp, nombre, direccion, correo, telefono);
-            break;
-        case 3:
-            lista.Mostrar();
-            break;
-        case 4:
-            cout << "Ingrese CURP a buscar: "; getline(cin, curp);
-            lista.BuscarPorCURP(curp);
-            break;        case 5:
-            cout << "Ingrese CURP a eliminar: "; getline(cin, curp);
-            lista.EliminarPorCURP(curp);
-            break;
-        case 6:
+            //aqui va el codigo de luis fernando en leer
             lista.Leer();
             break;
-        case 7:
-            cout << "Saliendo del sistema...\n";
+        case 3:
+            //aqui va el modificar informacion de Ruby
+            break;
+        case 4:
+            //Aqui va el codigo de Victor para eliminar
+            break;        
+        case 5:
+            //salir del programa
+            cout<<"Saliendo del programa :D";
+            opcion = 5;
             break;
         default:
             cout << "Opcion invalida. Intente nuevamente.\n";
         }
 
-    } while (opcion != 7);
+    } while (opcion != 5);
 
     return 0;
 }
