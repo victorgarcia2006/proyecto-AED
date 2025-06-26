@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <cstring>
 
 using namespace std;
 
@@ -22,6 +23,9 @@ struct DatosPersona{
     char correo[100];
     char telefono[20];
 };
+
+// Error si no se declara antes de la clase
+void GuardarDatos(const Persona* persona);
 
 class ListaPersonas {
 private:
@@ -98,9 +102,9 @@ public:
         while (temp != NULL) {
             cout << "CURP: " << temp->curp << endl;
             cout << "Nombre: " << temp->nombre << endl;
-            cout << "Dirección: " << temp->direccion << endl;
+            cout << "Direccion: " << temp->direccion << endl;
             cout << "Correo: " << temp->correo << endl;
-            cout << "Teléfono: " << temp->telefono << endl;
+            cout << "Telefono: " << temp->telefono << endl;
             cout << "-----------------------------------\n";
             temp = temp->sig;
         }
@@ -113,9 +117,9 @@ public:
                 cout << "\nPersona encontrada:\n";
                 cout << "CURP: " << temp->curp << endl;
                 cout << "Nombre: " << temp->nombre << endl;
-                cout << "Dirección: " << temp->direccion << endl;
+                cout << "Direccion: " << temp->direccion << endl;
                 cout << "Correo: " << temp->correo << endl;
-                cout << "Teléfono: " << temp->telefono << endl;
+                cout << "Telefono: " << temp->telefono << endl;
                 return;
             }
             temp = temp->sig;
@@ -146,6 +150,55 @@ public:
 
         delete temp;
         cout << "Persona eliminada por CURP.\n";
+    }
+    void Leer() {
+        ifstream archivo("personas.dat", ios::binary);
+        if (!archivo) {
+            cout << "No se pudo abrir el archivo para leer los datos.\n";
+            return;
+        }
+
+        DatosPersona datos;
+        int contador = 0;
+        
+        // Limpiar la lista actual antes de cargar
+        while (inicio != NULL) {
+            Persona *temp = inicio;
+            inicio = inicio->sig;
+            delete temp;
+        }
+        fin = NULL;
+
+        // Leer datos del archivo
+        while (archivo.read(reinterpret_cast<char*>(&datos), sizeof(DatosPersona))) {
+            // Crear nueva persona
+            Persona *nuevo = new Persona;
+            if (nuevo == NULL) {
+                cout << "No se pudo asignar memoria\n";
+                continue;
+            }
+
+            // Convertir de char a string
+            nuevo->curp = string(datos.curp);
+            nuevo->nombre = string(datos.nombre);
+            nuevo->direccion = string(datos.direccion);
+            nuevo->correo = string(datos.correo);
+            nuevo->telefono = string(datos.telefono);
+            nuevo->sig = NULL;
+            nuevo->ant = fin;
+
+            // Insertar al final de la lista
+            if (fin != NULL) {
+                fin->sig = nuevo;
+            } else {
+                inicio = nuevo;
+            }
+            fin = nuevo;
+            contador++;
+        }
+
+        archivo.close();
+        cout << "Se cargaron " << contador << " registros desde el archivo.\n";
     }
 
     ~ListaPersonas() {
@@ -178,15 +231,16 @@ void GuardarDatos(const Persona* persona){
 }
 
 void Menu() {
-    cout << "\n=========== MENÚ PERSONAS ===========\n";
+    cout << "\n=========== MENU PERSONAS ===========\n";
     cout << "1. Insertar persona al inicio\n";
     cout << "2. Insertar persona al final\n";
     cout << "3. Mostrar todas las personas\n";
     cout << "4. Buscar persona por CURP\n";
     cout << "5. Eliminar persona por CURP\n";
-    cout << "6. Salir\n";
+    cout << "6. Cargar datos desde archivo\n";
+    cout << "7. Salir\n";
     cout << "=====================================\n";
-    cout << "Seleccione una opción: ";
+    cout << "Seleccione una opcion: ";
 }
 
 int main() {
@@ -203,17 +257,17 @@ int main() {
         case 1:
             cout << "CURP: "; getline(cin, curp);
             cout << "Nombre: "; getline(cin, nombre);
-            cout << "Dirección: "; getline(cin, direccion);
+            cout << "Direccion: "; getline(cin, direccion);
             cout << "Correo: "; getline(cin, correo);
-            cout << "Teléfono: "; getline(cin, telefono);
+            cout << "Telefono: "; getline(cin, telefono);
             lista.InsertarInicio(curp, nombre, direccion, correo, telefono);
             break;
         case 2:
             cout << "CURP: "; getline(cin, curp);
             cout << "Nombre: "; getline(cin, nombre);
-            cout << "Dirección: "; getline(cin, direccion);
+            cout << "Direccion: "; getline(cin, direccion);
             cout << "Correo: "; getline(cin, correo);
-            cout << "Teléfono: "; getline(cin, telefono);
+            cout << "Telefono: "; getline(cin, telefono);
             lista.InsertarFinal(curp, nombre, direccion, correo, telefono);
             break;
         case 3:
@@ -222,19 +276,21 @@ int main() {
         case 4:
             cout << "Ingrese CURP a buscar: "; getline(cin, curp);
             lista.BuscarPorCURP(curp);
-            break;
-        case 5:
+            break;        case 5:
             cout << "Ingrese CURP a eliminar: "; getline(cin, curp);
             lista.EliminarPorCURP(curp);
             break;
         case 6:
+            lista.Leer();
+            break;
+        case 7:
             cout << "Saliendo del sistema...\n";
             break;
         default:
-            cout << "Opción inválida. Intente nuevamente.\n";
+            cout << "Opcion invalida. Intente nuevamente.\n";
         }
 
-    } while (opcion != 6);
+    } while (opcion != 7);
 
     return 0;
 }
