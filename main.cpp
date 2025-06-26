@@ -335,6 +335,10 @@ int main() {
             break;
         case 3:
             //aqui va el modificar informacion de Ruby
+            string Curp;
+            cout<< "Ingrese la curp que quiere editar:"<<endl;
+            getline(cin, Curp); //leer una linea de string
+            lista.Modificar(Curp);
             break;
         case 4:
             //Aqui va el codigo de Victor para eliminar
