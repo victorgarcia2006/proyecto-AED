@@ -218,24 +218,30 @@ public:
     }
 
     void Modificar(string curp){
-        fstream archivo("personas.dat", ios::in | ios::out | ios::binary);
+        //abrir archivo en modo lectura/escritura binario
+        fstream archivo("personas.dat", ios::in | ios::out | ios::binary); //in>leer, out>escribir, binary>indica que es un archivo binario y no de texto
+
+        //validacion de apertura
         if(!archivo){
             cout <<"Error al abrir el archivo para modificar"<<endl;
             return;
         }
         
+        //preparar variables donde se leeran registros y revisara si fue o no encontrado la curp
         DatosPersona datos;
         bool encontrado = false;
 
-        while(!archivo.eof()){
+        
+        while(!archivo.eof()){ //estar leyendo secuencialmente los registros antes de llegar a 
             streampos pos = archivo.tellg(); //guarda la posicion
-            archivo.read(reinterpret_cast<char*>(&datos), sizeof(DatosPersona));
+            archivo.read(reinterpret_cast<char*>(&datos), sizeof(DatosPersona)); //leer un bloque del tamaño de struct
 
-        if (archivo.eof()) break;
+        if (archivo.eof()) break; //si se llega a eof salir (End Of File)
 
-        if (string(datos.curp) == curp) {
+        if (string(datos.curp) == curp) { //revisar si ya se encontro la persona ingresada
             encontrado = true;
             cout << "\nRegistro encontrado:\n";
+            //mostar los datos de la persona previo a la edicion
             cout << "Nombre: " << datos.nombre << endl;
             cout << "Direccion: " << datos.direccion << endl;
             cout << "Correo: " << datos.correo << endl;
@@ -243,6 +249,7 @@ public:
 
             char opcion;
 
+            //permitirle al usuario un menu para elegir que quiere o no editar
             cout << "¿Deseas modificar el nombre? (s/n): ";
             cin >> opcion;
             cin.ignore();
@@ -253,10 +260,10 @@ public:
 
             cout << "¿Deseas modificar la direccion? (s/n): ";
             cin >> opcion;
-            cin.ignore();
+            cin.ignore(); //limpiar buffer
             if (opcion == 's') {
                 cout << "Nueva direccion: ";
-                cin.getline(datos.direccion, sizeof(datos.direccion));
+                cin.getline(datos.direccion, sizeof(datos.direccion)); //guardar nueva informacion en la variable, re escribiendo nueva informacion
             }
 
             cout << "¿Deseas modificar el correo? (s/n): ";
@@ -277,7 +284,7 @@ public:
 
             // Volver a la posición para sobrescribir
             archivo.seekp(pos);
-            archivo.write(reinterpret_cast<const char*>(&datos), sizeof(DatosPersona));
+            archivo.write(reinterpret_cast<const char*>(&datos), sizeof(DatosPersona)); //sobre escribir en la posicion de la persona que fue editada
             cout << "Registro actualizado exitosamente.\n";
             break;
         }
