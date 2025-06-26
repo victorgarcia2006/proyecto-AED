@@ -327,6 +327,17 @@ int main() {
         switch (opcion) {
         case 1:
             //aqui va el codigo de citlali para crear una persona en el documento
+            cout << "Ingrese CURP: ";
+            getline(cin, curp);
+            cout << "Ingrese Nombre: ";
+            getline(cin, nombre);
+            cout << "Ingrese Direccion: ";
+            getline(cin, direccion);
+            cout << "Ingrese Correo: ";
+            getline(cin, correo);
+            cout << "Ingrese Telefono: ";
+            getline(cin, telefono);
+            lista.InsertarInicio(curp, nombre, direccion, correo, telefono);
 
             break;
         case 2:
