@@ -5,7 +5,7 @@
 
 using namespace std;
 
-struct Persona {
+struct Persona { 
     string curp;
     string nombre;
     string direccion;
@@ -16,7 +16,7 @@ struct Persona {
 };
 
 
-struct DatosPersona{
+struct DatosPersona{ //guarda  todos los campos juntos como un bloque binario
     char curp[50];
     char nombre[100];
     char direccion[100];
@@ -34,12 +34,14 @@ public:
     }
 
     void InsertarInicio(string curp, string nombre, string direccion, string correo, string telefono) {
-        Persona *nuevo = new Persona;
+        Persona *nuevo = new Persona; // Crear un nuevo nodo de tipo Persona
+         // Verificar si la memoria se asigno correctamente
         if (nuevo == NULL) {
             cout << "No se pudo asignar memoria\n";
             return;
         }
 
+        // Asignar los valores a los campos del nuevo nodo
         nuevo->curp = curp;
         nuevo->nombre = nombre;
         nuevo->direccion = direccion;
@@ -48,6 +50,8 @@ public:
         nuevo->sig = inicio;
         nuevo->ant = NULL;
 
+        // Si la lista no está vacía, ajustar el puntero anterior del nodo inicial
+        // para que apunte al nuevo nodo
         if (inicio != NULL) {
             inicio->ant = nuevo;
         } else {
@@ -57,6 +61,8 @@ public:
 
         cout << "Persona insertada al inicio.\n";
 
+        // Guardar los datos en el archivo
+        // Llamar a la funcion GuardarDatos para guardar el nuevo nodo en el archivo
          GuardarDatos(nuevo);
         cout << "Datos guardados en el archivo.\n";
     }
@@ -149,22 +155,33 @@ public:
     }
 
     //De aqui inicia el codigo de manejo con archivos
+    // Esta funcion guarda los datos de una persona en un archivo binario
+    // Recibe un puntero a una estructura Persona y guarda sus datos en un archivo llamado "personas.dat"
+    // Utiliza la estructura DatosPersona para almacenar los datos de forma binaria
     void GuardarDatos(const Persona* persona){
     DatosPersona datos;
 
+    // Limpiar los campos de datos 
+    
     strncpy (datos.curp, persona->curp.c_str(), sizeof(datos.curp));
     strncpy (datos.nombre, persona->nombre.c_str(), sizeof(datos.nombre));
     strncpy (datos.direccion, persona->direccion.c_str(), sizeof(datos.direccion));
     strncpy (datos.correo, persona->correo.c_str(), sizeof(datos.correo));  
     strncpy (datos.telefono, persona->telefono.c_str(), sizeof(datos.telefono));
 
+    //ios::binary indica que el archivo se abrirá en modo binario
+    //ios::app indica que lo agrega al final del archivo, no borra el anterior 
     ofstream archivo("personas.dat", ios::binary | ios::app);
     if (!archivo) {
         cout << "Error al abrir el archivo para guardar los datos.\n";
         return;
     }
 
+    // reinterpret_cast convierte el puntero a DatosPersona a un puntero de tipo char para escribir en el archivo (como bytes)
+    // sizeof(DatosPersona) indica cuantos bytes debe escribir
     archivo.write(reinterpret_cast<const char*>(&datos), sizeof(DatosPersona));
+    
+    //Siempre cerrar el archivo despues de escribir para evitar perder datos
     archivo.close();
     }
     void Leer() {
