@@ -1,3 +1,11 @@
+/*
+Alumnos:
+- Víctor Alfredo García Calvillo
+- Luis Fernando Escobedo Hernández
+- Ruby Esmeralda López Correa
+- Citlali García Espinoza
+*/
+
 #include <iostream>
 #include <string>
 #include <fstream>
